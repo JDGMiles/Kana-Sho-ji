@@ -1,0 +1,218 @@
+
+<!DOCTYPE html><html>
+
+<head>
+  <title>Kana Sh&#333;ji &#20206;&#21517;&#38556;&#23376;</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="shortcut icon" href="favicon.ico">
+</head>
+
+<body onload="B(1);"><center><table>
+  <td class="bigtd" id="redshoji" style="background-color:red; position:absolute;"><table class="shoji" style="background-color:red">
+    <tr>
+      <td onclick="R(1)"><center><span id="R1">&#12354;</span></center></td>
+      <td onclick="R(2)"><center><span id="R2">&#12354;</span></center></td>
+      <td onclick="R(3)"><center><span id="R3">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="R(4)"><center><span id="R4">&#12354;</span></center></td>
+      <td onclick="R(5)"><center><span id="R5">&#12354;</span></center></td>
+      <td onclick="R(6)"><center><span id="R6">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="R(7)"><center><span id="R7">&#12354;</span></center></td>
+      <td onclick="R(8)"><center><span id="R8">&#12354;</span></center></td>
+      <td onclick="R(9)"><center><span id="R9">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="R(10)"><center><span id="R10">&#12354;</span></center></td>
+      <td onclick="R(11)"><center><span id="R11">&#12354;</span></center></td>
+      <td onclick="R(12)"><center><span id="R12">&#12354;</span></center></td>
+    </tr>
+  </table></td>
+  <td class="bigtd" id="blueshoji" style="background-color:blue; position:absolute;"><table class="shoji" style="background-color:blue">
+    <tr>
+      <td onclick="B(1)"><center><span id="B1">&#12354;</span></center></td>
+      <td onclick="B(2)"><center><span id="B2">&#12354;</span></center></td>
+      <td onclick="B(3)"><center><span id="B3">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="B(4)"><center><span id="B4">&#12354;</span></center></td>
+      <td onclick="B(5)"><center><span id="B5">&#12354;</span></center></td>
+      <td onclick="B(6)"><center><span id="B6">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="B(7)"><center><span id="B7">&#12354;</span></center></td>
+      <td onclick="B(8)"><center><span id="B8">&#12354;</span></center></td>
+      <td onclick="B(9)"><center><span id="B9">&#12354;</span></center></td>
+    </tr>
+    <tr>
+      <td onclick="B(10)"><center><span id="B10">&#12354;</span></center></td>
+      <td onclick="B(11)"><center><span id="B11">&#12354;</span></center></td>
+      <td onclick="B(12)"><center><span id="B12">&#12354;</span></center></td>
+    </tr>
+  </table></td>
+  <td style="position:absolute; left:880px; height:400px; width:15000px;"><span id="info1"></span><br><span id="info2"></span><br><span id="info3"></span></td>
+</table></center>
+</body>
+
+</html>
+
+<script type="text/javascript">
+var animating=0;
+var redstart=30;
+var bluestart=440;
+var redpos=redstart;
+var bluepos=bluestart;
+var doorspeed=5;
+var reddir=1;
+var bluedir=-1;
+var animationtype=0;
+var slideorder=0;
+var animationspeed=6;
+var runningtotalobjects=0;
+var usedobjects=[]; for(i=0; i<totalobjects; i++){usedobjects[i]=0;}
+var tempusedobjects=[]; for(i=0; i<totalobjects; i++){tempusedobjects[i]=0;}
+var testdummy=0;
+var redanswercell=0;
+var blueanswercell=0;
+var answered=-1;
+var answerobject=0;
+var redcell=[]; for(i=0; i<totalobjects; i++){redcell[i]=i;}
+var bluecell=[]; for(i=0; i<totalobjects; i++){bluecell[i]=i;}
+var redsymbol=["&#12354;", "&#12356;", "&#12358;", "&#12360;", "&#12362;", "&#12363;", "&#12365;", "&#12367;", "&#12369;", "&#12371;", "&#12373;", "&#12375;", "&#12377;", "&#12379;", "&#12381;", "&#12383;", "&#12385;", "&#12388;", "&#12390;", "&#12392;", "&#12394;", "&#12395;", "&#12396;", "&#12397;", "&#12398;", "&#12399;", "&#12402;", "&#12405;", "&#12408;", "&#12411;", "&#12414;", "&#12415;", "&#12416;", "&#12417;", "&#12418;", "&#12420;", "&#12422;", "&#12424;", "&#12425;", "&#12426;", "&#12427;", "&#12428;", "&#12429;", "&#12431;", "&#12434;", "&#12435;", "&#12364;", "&#12366;", "&#12368;", "&#12370;", "&#12372;", "&#12374;", "&#12376;", "&#12378;", "&#12380;", "&#12382;", "&#12384;", "&#12386;", "&#12389;", "&#12391;", "&#12393;", "&#12400;", "&#12403;", "&#12406;", "&#12409;", "&#12412;", "&#12401;", "&#12404;", "&#12407;", "&#12410;", "&#12413;", "&#12365;&#12419;", "&#12365;&#12421;", "&#12365;&#12423;", "&#12375;&#12419;", "&#12375;&#12421;", "&#12375;&#12423;", "&#12385;&#12419;", "&#12385;&#12421;", "&#12385;&#12423;", "&#12395;&#12419;", "&#12395;&#12421;", "&#12395;&#12423;", "&#12402;&#12419;", "&#12402;&#12421;", "&#12402;&#12423;", "&#12415;&#12419;", "&#12415;&#12421;", "&#12415;&#12423;", "&#12426;&#12419;", "&#12426;&#12421;", "&#12426;&#12423;", "&#12366;&#12419;", "&#12366;&#12421;", "&#12366;&#12423;", "&#12376;&#12419;", "&#12376;&#12421;", "&#12376;&#12423;", "&#12403;&#12419;", "&#12403;&#12421;", "&#12403;&#12423;", "&#12404;&#12419;", "&#12404;&#12421;", "&#12404;&#12423;", "&#12405;&#12353;", "&#12405;&#12355;", "&#12405;&#12359;", "&#12405;&#12361;", "&#12405;&#12421;", "&#12358;&#12355;", "&#12358;&#12359;", "&#12434;", "&#12436;&#12353;", "&#12436;&#12355;", "&#12436;&#12359;", "&#12436;&#12361;", "&#12388;&#12353;", "&#12388;&#12355;", "&#12388;&#12359;", "&#12388;&#12361;", "&#12385;&#12359;", "&#12375;&#12359;", "&#12376;&#12359;", "&#12385;", "&#12386;", "&#12389;", "&#12388;"]
+var bluesymbol=["&#12450;", "&#12452;", "&#12454;", "&#12456;", "&#12458;", "&#12459;", "&#12461;", "&#12463;", "&#12465;", "&#12467;", "&#12469;", "&#12471;", "&#12473;", "&#12475;", "&#12477;", "&#12479;", "&#12481;", "&#12484;", "&#12486;", "&#12488;", "&#12490;", "&#12491;", "&#12492;", "&#12493;", "&#12494;", "&#12495;", "&#12498;", "&#12501;", "&#12504;", "&#12507;", "&#12510;", "&#12511;", "&#12512;", "&#12513;", "&#12514;", "&#12516;", "&#12518;", "&#12520;", "&#12521;", "&#12522;", "&#12523;", "&#12524;", "&#12525;", "&#12527;", "&#12530;", "&#12531;", "&#12460;", "&#12462;", "&#12464;", "&#12466;", "&#12468;", "&#12470;", "&#12472;", "&#12474;", "&#12476;", "&#12478;", "&#12480;", "&#12482;", "&#12485;", "&#12487;", "&#12489;", "&#12496;", "&#12499;", "&#12502;", "&#12505;", "&#12508;", "&#12497;", "&#12500;", "&#12503;", "&#12506;", "&#12509;", "&#12461;&#12515;", "&#12461;&#12517;", "&#12461;&#12519;", "&#12471;&#12515;", "&#12471;&#12517;", "&#12471;&#12519;", "&#12481;&#12515;", "&#12481;&#12517;", "&#12481;&#12519;", "&#12491;&#12515;", "&#12491;&#12517;", "&#12491;&#12519;", "&#12498;&#12515;", "&#12498;&#12517;", "&#12498;&#12519;", "&#12511;&#12515;", "&#12511;&#12517;", "&#12511;&#12519;", "&#12522;&#12515;", "&#12522;&#12517;", "&#12522;&#12519;", "&#12462;&#12515;", "&#12462;&#12517;", "&#12462;&#12519;", "&#12472;&#12515;", "&#12472;&#12517;", "&#12472;&#12519;", "&#12499;&#12515;", "&#12499;&#12517;", "&#12499;&#12519;", "&#12500;&#12515;", "&#12500;&#12517;", "&#12500;&#12519;", "&#12501;&#12449;", "&#12501;&#12451;", "&#12501;&#12455;", "&#12501;&#12457;", "&#12501;&#12517;", "&#12454;&#12451;", "&#12454;&#12455;", "&#12530;", "&#12532;&#12449;", "&#12532;&#12451;", "&#12532;&#12455;", "&#12532;&#12457;", "&#12484;&#12449;", "&#12484;&#12451;", "&#12484;&#12455;", "&#12484;&#12457;", "&#12481;&#12455;", "&#12471;&#12455;", "&#12472;&#12455;", "&#12486;&#12451;", "&#12487;&#12451;", "&#12487;&#12517;", "&#12488;&#12453;"]
+var score=0;
+var totalobjects=redsymbol.length;
+
+function paintdoors(){
+  answerobject=Math.floor(runningtotalobjects*Math.random());
+  while(usedobjects[answerobject]){answerobject=(answerobject+1)%runningtotalobjects}
+  redanswercell=Math.floor(12*Math.random());
+  blueanswercell=Math.floor(12*Math.random());
+  redcell[redanswercell]=answerobject;
+  bluecell[blueanswercell]=answerobject;
+  usedobjects[answerobject]=1;
+  tempusedobjects[answerobject]=1;
+  for(i=0; i<12; i++){
+    testdummy=Math.floor(totalobjects*Math.random());
+    while(tempusedobjects[testdummy]){testdummy=(testdummy+1)%totalobjects;}
+    if(i!=redanswercell){redcell[i]=testdummy; tempusedobjects[testdummy]=1;}
+  }
+  for(i=0; i<12; i++){
+    testdummy=Math.floor(totalobjects*Math.random());
+    while(tempusedobjects[testdummy]){testdummy=(testdummy+1)%totalobjects;}
+    if(i!=blueanswercell){bluecell[i]=testdummy; tempusedobjects[testdummy]=1;}
+  }
+  for(i=0; i<totalobjects; i++){tempusedobjects[i]=0;}
+}
+
+function doorcoords(){
+  document.getElementById("redshoji").style.left = redpos+"px";
+  document.getElementById("blueshoji").style.left = bluepos+"px";
+}
+
+function updatereddoor(){for(i=0; i<12; i++){document.getElementById("R"+(i+1)).innerHTML=redsymbol[redcell[i]];}}
+function updatebluedoor(){for(i=0; i<12; i++){document.getElementById("B"+(i+1)).innerHTML=bluesymbol[bluecell[i]];}}
+
+function B(cell){
+  if(!animating){
+    if(bluecell[cell-1]==answerobject){score++;}
+    runningtotalobjects++;
+    if(runningtotalobjects>totalobjects){runningtotalobjects=totalobjects;}
+    answered++; paintdoors();
+    document.getElementById("info1").innerHTML="Correct "+score;
+    document.getElementById("info2").innerHTML="Wrong "+(answered-score);
+    animating=1; animationtype=Math.floor((6*Math.random())%6); newshoji();
+  }
+}
+
+function newshoji(){
+  if(animating && animationtype==0){
+    redpos+=(reddir*doorspeed);
+    bluepos+=(bluedir*doorspeed);
+    if(redpos>=bluestart){redpos=bluestart; reddir=-1; document.getElementById("redshoji").style.zIndex = "2";}
+    if(bluepos<=redstart){bluepos=redstart; bluedir=1; document.getElementById("blueshoji").style.zIndex = "1";}
+    if(redpos<=redstart){redpos=redstart; reddir=1; animating=0; document.getElementById("redshoji").style.zIndex = "1";}
+    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0; document.getElementById("blueshoji").style.zIndex = "2";}
+    if(Math.abs(bluepos-redpos)<doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
+    doorcoords();
+    setTimeout(newshoji,(animationspeed))
+  }
+  if(animating && animationtype==1){
+    if(slideorder==0){
+      redpos+=(reddir*doorspeed*2);
+      if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatereddoor();}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=1; document.getElementById("redshoji").style.zIndex = "2"; document.getElementById("blueshoji").style.zIndex = "1";}
+      doorcoords();
+    }
+    else{
+      bluepos+=(bluedir*doorspeed*2);
+      if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatebluedoor();}
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0; document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      doorcoords();
+    }
+    setTimeout(newshoji,(animationspeed))
+  }
+  if(animating && animationtype==2){
+    if(slideorder==0){
+      document.getElementById("redshoji").style.zIndex = "2"; document.getElementById("blueshoji").style.zIndex = "1";
+      redpos+=(reddir*doorspeed*2);
+      if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatebluedoor();}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=1; document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      doorcoords();
+    }
+    else{
+      bluepos+=(bluedir*doorspeed*2);
+      if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatereddoor();}
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0;}
+      doorcoords();
+    }
+    setTimeout(newshoji,(animationspeed))
+  }
+  if(animating && animationtype==3){
+    if(redpos==redstart && bluepos==bluestart){document.getElementById("redshoji").style.zIndex = "2"; document.getElementById("blueshoji").style.zIndex = "1";}
+    redpos+=(reddir*doorspeed);
+    bluepos+=(bluedir*doorspeed);
+    if(redpos>=bluestart){redpos=bluestart; reddir=-1; document.getElementById("redshoji").style.zIndex = "1";}
+    if(bluepos<=redstart){bluepos=redstart; bluedir=1; document.getElementById("blueshoji").style.zIndex = "2";}
+    if(redpos<=redstart){redpos=redstart; reddir=1; animating=0;}
+    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0;}
+    if(Math.abs(bluepos-redpos)<doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
+    doorcoords();
+    setTimeout(newshoji,(animationspeed))
+  }
+  if(animating && animationtype==4){
+    if(slideorder==0){
+      bluepos+=(bluedir*doorspeed*2);
+      if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatereddoor();}
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=1; document.getElementById("redshoji").style.zIndex = "2"; document.getElementById("blueshoji").style.zIndex = "1";}
+      doorcoords();
+    }
+    else{
+      redpos+=(reddir*doorspeed*2);
+      if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatebluedoor();}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0; document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      doorcoords();
+    }
+    setTimeout(newshoji,(animationspeed))
+  }
+  if(animating && animationtype==5){
+    if(slideorder==0){
+      document.getElementById("redshoji").style.zIndex = "2"; document.getElementById("blueshoji").style.zIndex = "1";
+      bluepos+=(bluedir*doorspeed*2);
+      if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatebluedoor();}
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=1; document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      doorcoords();
+    }
+    else{
+      redpos+=(reddir*doorspeed*2);
+      if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatereddoor();}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0;}
+      doorcoords();
+    }
+    setTimeout(newshoji,(animationspeed))
+  }
+}
+
+</script>

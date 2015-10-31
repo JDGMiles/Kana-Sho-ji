@@ -1,0 +1,13 @@
+body {font-family: Helvetica, Sans-Serif; font-size: 320%; background-color: black;}
+
+a:link {color: red; text-decoration: none;}
+a:link:hover {text-decoration:underline}
+a:visited {color: red;}
+
+table {padding: 18px 20px 14px 20px; border-spacing:5px; border: 3px solid black;}
+td {background-color:white; border: 3px solid black; width:50px; height:140px;}
+
+.bigtd {width:400px; height:655px}
+.title {font-size:150%;}
+.shoji {width:400px;}
+.romaji {font-size:90%;}
