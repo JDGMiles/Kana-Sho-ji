@@ -52,6 +52,8 @@
     </tr>
   </table></td>
   <td id="result" class="resultspace"></td>
+  <td id="track" class="scoretrack"></td>
+  <td id="finalscore" class="finalscore"></td>
 </table></center>
 </body>
 
@@ -60,7 +62,7 @@
 <script type="text/javascript">
 var redstart=8; var bluestart=418; var redpos=redstart; var bluepos=bluestart; var reddir=1; var bluedir=-1; // door positions
 var animating=0; var animationtype=0; var slideorder=0; // animation trackers
-var doorspeed=5; var animationspeed=6; // animation speed variables
+var doorspeed=10; var animationspeed=10; // animation speed variables
 
 var answerobject=-1;
 var correct=0;
@@ -74,13 +76,24 @@ var redsymbol=["&#12354;", "&#12356;", "&#12358;", "&#12360;", "&#12362;", "&#12
 
 var bluesymbol=["&#12450;", "&#12452;", "&#12454;", "&#12456;", "&#12458;", "&#12459;", "&#12461;", "&#12463;", "&#12465;", "&#12467;", "&#12469;", "&#12471;", "&#12473;", "&#12475;", "&#12477;", "&#12479;", "&#12481;", "&#12484;", "&#12486;", "&#12488;", "&#12490;", "&#12491;", "&#12492;", "&#12493;", "&#12494;", "&#12495;", "&#12498;", "&#12501;", "&#12504;", "&#12507;", "&#12510;", "&#12511;", "&#12512;", "&#12513;", "&#12514;", "&#12516;", "&#12518;", "&#12520;", "&#12521;", "&#12522;", "&#12523;", "&#12524;", "&#12525;", "&#12527;", "&#12530;", "&#12531;", "&#12460;", "&#12462;", "&#12464;", "&#12466;", "&#12468;", "&#12470;", "&#12472;", "&#12474;", "&#12476;", "&#12478;", "&#12480;", "&#12482;", "&#12485;", "&#12487;", "&#12489;", "&#12496;", "&#12499;", "&#12502;", "&#12505;", "&#12508;", "&#12497;", "&#12500;", "&#12503;", "&#12506;", "&#12509;", "&#12461;&#12515;", "&#12461;&#12517;", "&#12461;&#12519;", "&#12471;&#12515;", "&#12471;&#12517;", "&#12471;&#12519;", "&#12481;&#12515;", "&#12481;&#12517;", "&#12481;&#12519;", "&#12491;&#12515;", "&#12491;&#12517;", "&#12491;&#12519;", "&#12498;&#12515;", "&#12498;&#12517;", "&#12498;&#12519;", "&#12511;&#12515;", "&#12511;&#12517;", "&#12511;&#12519;", "&#12522;&#12515;", "&#12522;&#12517;", "&#12522;&#12519;", "&#12462;&#12515;", "&#12462;&#12517;", "&#12462;&#12519;", "&#12472;&#12515;", "&#12472;&#12517;", "&#12472;&#12519;", "&#12499;&#12515;", "&#12499;&#12517;", "&#12499;&#12519;", "&#12500;&#12515;", "&#12500;&#12517;", "&#12500;&#12519;", "&#12501;&#12449;", "&#12501;&#12451;", "&#12501;&#12455;", "&#12501;&#12457;", "&#12501;&#12517;", "&#12454;&#12451;", "&#12454;&#12455;", "&#12530;", "&#12532;&#12449;", "&#12532;&#12451;", "&#12532;&#12455;", "&#12532;&#12457;", "&#12484;&#12449;", "&#12484;&#12451;", "&#12484;&#12455;", "&#12484;&#12457;", "&#12481;&#12455;", "&#12471;&#12455;", "&#12472;&#12455;", "&#12486;&#12451;", "&#12487;&#12451;", "&#12487;&#12517;", "&#12488;&#12453;"]
 
-var runningtotalobjects=0;
-var totalobjects=redsymbol.length;
+var runningtotalobjects=2;
+var runningtotalobjectsmodifier=2;
+var totalobjects=123;
 redsymbol[totalobjects+1]=""; bluesymbol[totalobjects+1]="";
-var answered=-1; // -1 because of the initialising B(1) function call
+var answered=-1;
+var score=0;
+var finished=0;
+var scoretrack=[];
+var time=100;
+var levelzerotime=80;
+var levelincrement=10;
+var showtimecutoff=51;
+var replay=0;
+var lives=3;
 
 function paintdoors(){
   answerobject=Math.floor(runningtotalobjects*Math.random());
+  if(answered==0){answerobject=0}
   while(usedobjects[answerobject]){answerobject=(answerobject+1)%runningtotalobjects}
   redanswercell=Math.floor(12*Math.random());
   blueanswercell=Math.floor(12*Math.random());
@@ -135,31 +148,182 @@ function updatebluedoor(){
 }
 
 function B(cell){
-  if(!animating){
-    if(bluecell[cell-1]==answerobject){correct=1;}
-    runningtotalobjects++;
-    if(runningtotalobjects>totalobjects){runningtotalobjects=totalobjects;}
-    answered++;
-    if(answered==totalobjects){for(i=0; i<totalobjects; i++){usedobjects[i]=0;}}
-    paintdoors();
-    animating=1;
-    if(correct==1){
-      document.getElementById("result").style.color="#0044FF";
-      document.getElementById("result").style.fontSize="1400%";
-      document.getElementById("result").style.top="-130px";
-      document.getElementById("result").style.left="810px";
-      document.getElementById("result").style.fontWeight="bold";
-      document.getElementById("result").innerHTML="&#9675;";}
-    else if(answered>0){
-      document.getElementById("result").style.color="#FF1100";
-      document.getElementById("result").style.fontSize="750%";
-      document.getElementById("result").style.top="115px";
-      document.getElementById("result").style.left="870px";
-      document.getElementById("result").style.fontWeight="normal";
-      document.getElementById("result").innerHTML="&#10005;";}
-    animationtype=Math.floor((6*Math.random())%6);
-    newshoji();
+  if(answered==-1){timer();}
+  if(!animating && !finished){
+    time=levelzerotime+(levelincrement*(Math.floor(Math.sqrt(answered+1))+1));
+    if(bluecell[cell-1]==answerobject){
+      correct=1;
+//      scoretrack[answered]="<span style=\"font-size:100%; color:blue\">O</span>"
+//      document.getElementById("track").innerHTML=scoretrack.join("");
+    }
+    else{
+      scoretrack[answered]="<span style=\"font-size:100%; color:#FF1100\">&#10005;</span> <span style=\"font-size:90%; color:white\">"+redsymbol[answerobject]+" "+bluesymbol[answerobject]+"<br></span>";
+      document.getElementById("track").innerHTML=scoretrack.join("");
+    }
+    runningtotalobjects+=runningtotalobjectsmodifier;
+    answer();
   }
+  if(replay){restart();}
+}
+
+function R(cell){
+  if(answered==-1){timer();}
+  if(!animating && !finished){
+    time=levelzerotime+(levelincrement*(Math.floor(Math.sqrt(answered+1))+1));
+    if(redcell[cell-1]==answerobject){
+      correct=1;
+//      scoretrack[answered]="<span style=\"font-size:100%; color:blue\">O</span>"
+//      document.getElementById("track").innerHTML=scoretrack.join("");
+    }
+    else{
+      scoretrack[answered]="<span style=\"font-size:100%; color:#FF1100\">&#10005;</span> <span style=\"font-size:90%; color:white\">"+redsymbol[answerobject]+" "+bluesymbol[answerobject]+"<br></span>";
+      document.getElementById("track").innerHTML=scoretrack.join("");
+    }
+    runningtotalobjects+=runningtotalobjectsmodifier;
+    answer();
+  }
+  if(replay){restart();}
+}
+
+function answer(){
+  if(runningtotalobjects>totalobjects){runningtotalobjects=totalobjects;}
+  answered++;
+  if(answered==totalobjects){for(i=0; i<totalobjects; i++){usedobjects[i]=0;}}
+  paintdoors();
+  animating=1;
+  if(correct==1){
+    document.getElementById("result").style.color="#0044FF";
+    document.getElementById("result").style.fontSize="1400%";
+    document.getElementById("result").style.top="-290px";
+    document.getElementById("result").style.left="810px";
+    document.getElementById("result").style.fontWeight="bold";
+    document.getElementById("result").innerHTML="&#9675;";
+    document.getElementById("finalscore").innerHTML="&#10003;";
+    score++;}
+  else if(answered>0){
+    document.getElementById("result").style.color="#FF1100";
+    document.getElementById("result").style.fontSize="750%";
+    document.getElementById("result").style.top="-45px";
+    document.getElementById("result").style.left="860px";
+    document.getElementById("result").style.fontWeight="normal";
+    document.getElementById("result").innerHTML="&#10005;";}
+  animationtype=Math.floor((6*Math.random())%6);
+  if(answered==totalobjects || answered-score>lives){finished=1; resultscreen();};
+  newshoji();
+}
+
+function timer(){
+  if(!finished){
+    time--;
+    if(time==0){B((answerobject+1)%12); timer();}
+    else{setTimeout(timer,100)}
+    if(!animating){updatetime();}
+  }
+}
+
+function updatetime(){
+  if(!finished){
+    document.getElementById("result").style.color="black";
+    if(time<showtimecutoff){document.getElementById("result").style.color="white";}
+    document.getElementById("result").style.fontSize="240%";
+    document.getElementById("result").style.top="100px";
+    document.getElementById("result").style.left="928px";
+    document.getElementById("result").style.fontWeight="normal";
+    document.getElementById("result").innerHTML=Math.floor(time/10)+"."+(time%10);
+    document.getElementById("finalscore").innerHTML="";
+  }
+}
+
+function resultscreen(){
+  document.getElementById("result").style.color="#0044FF";
+  document.getElementById("result").style.fontSize="1400%";
+  document.getElementById("result").style.top="-290px";
+  document.getElementById("result").style.left="810px";
+  document.getElementById("result").style.fontWeight="bold";
+  document.getElementById("result").innerHTML="&#9675;";
+  document.getElementById("finalscore").innerHTML=score;
+  setTimeout(playagain,2000)
+}
+
+function playagain(){
+  for(i=0; i<12; i++){bluecell[i]=totalobjects+1; redcell[i]=totalobjects+1;}
+//  redsymbol[0]=""; redcell[0]=0;
+//  redsymbol[1]="P"; redcell[1]=1;
+  redsymbol[2]="P"; redcell[2]=2;
+//  redsymbol[3]=""; redcell[3]=3;
+//  redsymbol[4]="L"; redcell[4]=4;
+  redsymbol[5]="L"; redcell[5]=5;
+  redsymbol[6]="A"; redcell[6]=6;
+  redsymbol[7]="G"; redcell[7]=7;
+  redsymbol[8]="A"; redcell[8]=8;
+//  redsymbol[9]=""; redcell[9]=9;
+//  redsymbol[10]=""; redcell[10]=10;
+  redsymbol[11]="Y"; redcell[11]=11;
+//  bluesymbol[0]=""; bluecell[0]=0;
+//  bluesymbol[1]=""; bluecell[1]=1;
+//  bluesymbol[2]=""; bluecell[2]=2;
+//  bluesymbol[3]=""; bluecell[3]=3;
+//  bluesymbol[4]=""; bluecell[4]=4;
+//  bluesymbol[5]=""; bluecell[5]=5;
+  bluesymbol[6]="I"; bluecell[6]=6;
+  bluesymbol[7]="N"; bluecell[7]=7;
+  bluesymbol[8]="&#9786;"; bluecell[8]=8;
+//  bluesymbol[9]=""; bluecell[9]=9;
+//  bluesymbol[10]=""; bluecell[10]=10;
+//  bluesymbol[11]=""; bluecell[11]=11;
+  replay=1;
+  animating=1;
+  newshoji();
+}
+
+function restart(){
+  for(i=0; i<12; i++){bluecell[i]=totalobjects+1; redcell[i]=totalobjects+1;}
+  redsymbol[0]="K"; redcell[0]=0;
+  redsymbol[1]="A"; redcell[1]=1;
+  redsymbol[2]="N"; redcell[2]=2;
+//  redsymbol[3]=""; redcell[3]=3;
+  redsymbol[4]="S"; redcell[4]=4;
+  redsymbol[5]="H"; redcell[5]=5;
+//  redsymbol[6]=""; redcell[6]=6;
+//  redsymbol[7]=""; redcell[7]=7;
+//  redsymbol[8]=""; redcell[8]=8;
+//  redsymbol[9]=""; redcell[9]=9;
+//  redsymbol[10]=""; redcell[10]=10;
+//  redsymbol[11]=""; redcell[11]=11;
+  bluesymbol[0]="A"; bluecell[0]=0;
+//  bluesymbol[1]=""; bluecell[1]=1;
+//  bluesymbol[2]=""; bluecell[2]=2;
+  bluesymbol[3]="&#332;"; bluecell[3]=3;
+  bluesymbol[4]="J"; bluecell[4]=4;
+  bluesymbol[5]="I"; bluecell[5]=5;
+  bluesymbol[6]="&#20206;"; bluecell[6]=6;
+  bluesymbol[7]="&#21517;"; bluecell[7]=7;
+//  bluesymbol[8]=""; bluecell[8]=8;
+//  bluesymbol[9]=""; bluecell[9]=9;
+  bluesymbol[10]="&#38556;"; bluecell[10]=10;
+  bluesymbol[11]="&#23376;"; bluecell[11]=11;
+  answerobject=-1;
+  correct=0;
+  runningtotalobjects=0;
+  redsymbol[totalobjects+1]=""; bluesymbol[totalobjects+1]="";
+  answered=-1;
+  score=0;
+  finished=0;
+  for(i=0; i<scoretrack.length; i++){scoretrack[i]="";}
+  time=100;
+  replay=0;
+  for(i=0; i<totalobjects; i++){usedobjects[i]=0;}
+  for(i=0; i<totalobjects; i++){tempusedobjects[i]=0;}
+  document.getElementById("track").innerHTML=scoretrack.join("");
+  animating=1;
+  newshoji();
+  setTimeout(resetsymbols,1300)
+}
+
+function resetsymbols(){
+  redsymbol=["&#12354;", "&#12356;", "&#12358;", "&#12360;", "&#12362;", "&#12363;", "&#12365;", "&#12367;", "&#12369;", "&#12371;", "&#12373;", "&#12375;", "&#12377;", "&#12379;", "&#12381;", "&#12383;", "&#12385;", "&#12388;", "&#12390;", "&#12392;", "&#12394;", "&#12395;", "&#12396;", "&#12397;", "&#12398;", "&#12399;", "&#12402;", "&#12405;", "&#12408;", "&#12411;", "&#12414;", "&#12415;", "&#12416;", "&#12417;", "&#12418;", "&#12420;", "&#12422;", "&#12424;", "&#12425;", "&#12426;", "&#12427;", "&#12428;", "&#12429;", "&#12431;", "&#12434;", "&#12435;", "&#12364;", "&#12366;", "&#12368;", "&#12370;", "&#12372;", "&#12374;", "&#12376;", "&#12378;", "&#12380;", "&#12382;", "&#12384;", "&#12386;", "&#12389;", "&#12391;", "&#12393;", "&#12400;", "&#12403;", "&#12406;", "&#12409;", "&#12412;", "&#12401;", "&#12404;", "&#12407;", "&#12410;", "&#12413;", "&#12365;&#12419;", "&#12365;&#12421;", "&#12365;&#12423;", "&#12375;&#12419;", "&#12375;&#12421;", "&#12375;&#12423;", "&#12385;&#12419;", "&#12385;&#12421;", "&#12385;&#12423;", "&#12395;&#12419;", "&#12395;&#12421;", "&#12395;&#12423;", "&#12402;&#12419;", "&#12402;&#12421;", "&#12402;&#12423;", "&#12415;&#12419;", "&#12415;&#12421;", "&#12415;&#12423;", "&#12426;&#12419;", "&#12426;&#12421;", "&#12426;&#12423;", "&#12366;&#12419;", "&#12366;&#12421;", "&#12366;&#12423;", "&#12376;&#12419;", "&#12376;&#12421;", "&#12376;&#12423;", "&#12403;&#12419;", "&#12403;&#12421;", "&#12403;&#12423;", "&#12404;&#12419;", "&#12404;&#12421;", "&#12404;&#12423;", "&#12405;&#12353;", "&#12405;&#12355;", "&#12405;&#12359;", "&#12405;&#12361;", "&#12405;&#12421;", "&#12358;&#12355;", "&#12358;&#12359;", "&#12434;", "&#12436;&#12353;", "&#12436;&#12355;", "&#12436;&#12359;", "&#12436;&#12361;", "&#12388;&#12353;", "&#12388;&#12355;", "&#12388;&#12359;", "&#12388;&#12361;", "&#12385;&#12359;", "&#12375;&#12359;", "&#12376;&#12359;", "&#12385;", "&#12386;", "&#12389;", "&#12388;"]
+
+  bluesymbol=["&#12450;", "&#12452;", "&#12454;", "&#12456;", "&#12458;", "&#12459;", "&#12461;", "&#12463;", "&#12465;", "&#12467;", "&#12469;", "&#12471;", "&#12473;", "&#12475;", "&#12477;", "&#12479;", "&#12481;", "&#12484;", "&#12486;", "&#12488;", "&#12490;", "&#12491;", "&#12492;", "&#12493;", "&#12494;", "&#12495;", "&#12498;", "&#12501;", "&#12504;", "&#12507;", "&#12510;", "&#12511;", "&#12512;", "&#12513;", "&#12514;", "&#12516;", "&#12518;", "&#12520;", "&#12521;", "&#12522;", "&#12523;", "&#12524;", "&#12525;", "&#12527;", "&#12530;", "&#12531;", "&#12460;", "&#12462;", "&#12464;", "&#12466;", "&#12468;", "&#12470;", "&#12472;", "&#12474;", "&#12476;", "&#12478;", "&#12480;", "&#12482;", "&#12485;", "&#12487;", "&#12489;", "&#12496;", "&#12499;", "&#12502;", "&#12505;", "&#12508;", "&#12497;", "&#12500;", "&#12503;", "&#12506;", "&#12509;", "&#12461;&#12515;", "&#12461;&#12517;", "&#12461;&#12519;", "&#12471;&#12515;", "&#12471;&#12517;", "&#12471;&#12519;", "&#12481;&#12515;", "&#12481;&#12517;", "&#12481;&#12519;", "&#12491;&#12515;", "&#12491;&#12517;", "&#12491;&#12519;", "&#12498;&#12515;", "&#12498;&#12517;", "&#12498;&#12519;", "&#12511;&#12515;", "&#12511;&#12517;", "&#12511;&#12519;", "&#12522;&#12515;", "&#12522;&#12517;", "&#12522;&#12519;", "&#12462;&#12515;", "&#12462;&#12517;", "&#12462;&#12519;", "&#12472;&#12515;", "&#12472;&#12517;", "&#12472;&#12519;", "&#12499;&#12515;", "&#12499;&#12517;", "&#12499;&#12519;", "&#12500;&#12515;", "&#12500;&#12517;", "&#12500;&#12519;", "&#12501;&#12449;", "&#12501;&#12451;", "&#12501;&#12455;", "&#12501;&#12457;", "&#12501;&#12517;", "&#12454;&#12451;", "&#12454;&#12455;", "&#12530;", "&#12532;&#12449;", "&#12532;&#12451;", "&#12532;&#12455;", "&#12532;&#12457;", "&#12484;&#12449;", "&#12484;&#12451;", "&#12484;&#12455;", "&#12484;&#12457;", "&#12481;&#12455;", "&#12471;&#12455;", "&#12472;&#12455;", "&#12486;&#12451;", "&#12487;&#12451;", "&#12487;&#12517;", "&#12488;&#12453;"]
 }
 
 function newshoji(){
@@ -169,8 +333,8 @@ function newshoji(){
     if(redpos>=bluestart){redpos=bluestart; reddir=-1; document.getElementById("redshoji").style.zIndex = "2";}
     if(bluepos<=redstart){bluepos=redstart; bluedir=1; document.getElementById("blueshoji").style.zIndex = "1";}
     if(redpos<=redstart){redpos=redstart; reddir=1; animating=0; document.getElementById("redshoji").style.zIndex = "1";}
-    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0; correct=0; document.getElementById("result").innerHTML="";  document.getElementById("blueshoji").style.zIndex = "2";}
-    if(Math.abs(bluepos-redpos)<doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
+    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0; correct=0; updatetime();  document.getElementById("blueshoji").style.zIndex = "2";}
+    if(Math.abs(bluepos-redpos)<2*doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
     doorcoords();
     setTimeout(newshoji,(animationspeed))
   }
@@ -184,7 +348,7 @@ function newshoji(){
     else{
       bluepos+=(bluedir*doorspeed*2);
       if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatebluedoor();}
-      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0; correct=0; document.getElementById("result").innerHTML=""; document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0; correct=0; updatetime();document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
       doorcoords();
     }
     setTimeout(newshoji,(animationspeed))
@@ -200,7 +364,7 @@ function newshoji(){
     else{
       bluepos+=(bluedir*doorspeed*2);
       if(bluepos<=redstart){bluepos=redstart; bluedir=1; updatereddoor();}
-      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0; correct=0; document.getElementById("result").innerHTML=""; }
+      if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; slideorder=0; animating=0; correct=0; updatetime();}
       doorcoords();
     }
     setTimeout(newshoji,(animationspeed))
@@ -212,8 +376,8 @@ function newshoji(){
     if(redpos>=bluestart){redpos=bluestart; reddir=-1; document.getElementById("redshoji").style.zIndex = "1";}
     if(bluepos<=redstart){bluepos=redstart; bluedir=1; document.getElementById("blueshoji").style.zIndex = "2";}
     if(redpos<=redstart){redpos=redstart; reddir=1; animating=0;}
-    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0; correct=0; document.getElementById("result").innerHTML="";  }
-    if(Math.abs(bluepos-redpos)<doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
+    if(bluepos>=bluestart){bluepos=bluestart; bluedir=-1; animating=0; correct=0; updatetime(); }
+    if(Math.abs(bluepos-redpos)<2*doorspeed){if(document.getElementById("redshoji").style.zIndex<=document.getElementById("blueshoji").style.zIndex){updatereddoor()} else{updatebluedoor()}}
     doorcoords();
     setTimeout(newshoji,(animationspeed))
   }
@@ -227,7 +391,7 @@ function newshoji(){
     else{
       redpos+=(reddir*doorspeed*2);
       if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatebluedoor();}
-      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0;  correct=0; document.getElementById("result").innerHTML="";  document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0;  correct=0; updatetime(); document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
       doorcoords();
     }
     setTimeout(newshoji,(animationspeed))
@@ -243,7 +407,7 @@ function newshoji(){
     else{
       redpos+=(reddir*doorspeed*2);
       if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatereddoor();}
-      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0; correct=0; document.getElementById("result").innerHTML="";  }
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0; correct=0; updatetime(); }
       doorcoords();
     }
     setTimeout(newshoji,(animationspeed))
