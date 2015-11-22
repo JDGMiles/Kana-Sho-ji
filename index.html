@@ -215,7 +215,7 @@ function answer(){
 function timer(){
   if(!finished){
     time--;
-    if(time==0){B((answerobject+1)%12); timer();}
+    if(time==0){B(blueanswercell%12); timer();}
     else{setTimeout(timer,100)}
     if(!animating){updatetime();}
   }
