@@ -51,10 +51,21 @@
       <td class="charactercell" id="BC12" onclick="B(12)" style="background-color:white"><center><span id="B12">&#23376;</span></center></td>
     </tr>
   </table></td>
-  <td id="result" class="resultspace"></td>
+  <td id="result" class="resultspace"><span style="color:white; font-size:90%; font-style:italic; font-family:Georgia;">(Click a door)</span></td>
   <td id="track" class="scoretrack"></td>
   <td id="finalscore" class="finalscore"></td>
 </table></center>
+<a href="#popup1"><img src="http://jdgmiles.github.io/questionmark.png" style="position:absolute; top:680px; left:10px; width:63px"></a>
+<a href="https://twitter.com/JDGMiles/" target="_blank"><img src="http://jdgmiles.github.io/twitter.png" style="position:absolute; top:680px; left:83px; width:60px"></a>
+<a href="http://JDGM.org/" target="_blank"><img src="http://jdgmiles.github.io/jdgm.png" style="position:absolute; top:680px; left:154px; width:60px"></a>
+
+<div id="popup1" class="overlay">
+	<div class="popup">
+		<div style="font-family:Georgia; color:white; text-align:center;">Kana Sh&#333;ji</div>
+		<a class="close" href="#">&times;</a>
+		<p style="font-family:Georgia; font-size:47%; color:white; text-align:justify;">Click a door to start the game, then click whichever kana is on <i>both</i> doors, in hiragana on the left and katakana on the right.<br><br>There will only ever be one that is on both doors; the rest are red herrings. You can click either of those &ldquo;matching&rdquo; characters - they both register as a correct answer.<br><br>As the game progresses the kana increase until each door has all 12 windows filled. The character difficulty also increases.<br><br>The levels have a time limit of 8 seconds plus half a second for each kana on the doors. A timer appears when you have 5 seconds remaining on a level.</p><div style="font-family:Georgia; font-size:80%; color:white; text-align:center;">&#12364;&#12435;&#12400;&#12387;&#12390;&#65281;</div>
+	</div>
+</div>
 </body>
 
 </html>
@@ -90,6 +101,8 @@ var levelincrement=10;
 var showtimecutoff=51;
 var replay=0;
 var lives=3;
+var encouragementtrack=0;
+var encouragement=["Nice!", "Great!", "Well done!", "Good!", "Cool!"]
 
 function paintdoors(){
   answerobject=Math.floor(runningtotalobjects*Math.random());
@@ -153,12 +166,15 @@ function B(cell){
     time=levelzerotime+(levelincrement*(Math.floor(Math.sqrt(answered+1))+1));
     if(bluecell[cell-1]==answerobject){
       correct=1;
+      document.getElementById("track").innerHTML="<div style=\"width:400px; text-align:center; color:white; font-size:120%; font-style:italic; font-family:Georgia; position:absolute; top:-23px; left:-125px;\">"+encouragement[encouragementtrack]+"</div>";
+      encouragementtrack=(encouragementtrack+1)%encouragement.length;
 //      scoretrack[answered]="<span style=\"font-size:100%; color:blue\">O</span>"
 //      document.getElementById("track").innerHTML=scoretrack.join("");
     }
     else{
       scoretrack[answered]="<span style=\"font-size:100%; color:#FF1100\">&#10005;</span> <span style=\"font-size:90%; color:white\">"+redsymbol[answerobject]+" "+bluesymbol[answerobject]+"<br></span>";
       document.getElementById("track").innerHTML=scoretrack.join("");
+      if(answered==-1){document.getElementById("track").innerHTML="<span style=\"color:white; font-size:90%; font-style:italic; font-family:Georgia; position:absolute; top:-65px; left:-75px;\">(Click a kana)</span>";}
     }
     runningtotalobjects+=runningtotalobjectsmodifier;
     answer();
@@ -198,7 +214,8 @@ function answer(){
     document.getElementById("result").style.left="810px";
     document.getElementById("result").style.fontWeight="bold";
     document.getElementById("result").innerHTML="&#9675;";
-    document.getElementById("finalscore").innerHTML="&#10003;";
+//    document.getElementById("finalscore").innerHTML="&#10003;";
+    document.getElementById("finalscore").innerHTML=score+1;
     score++;}
   else if(answered>0){
     document.getElementById("result").style.color="#FF1100";
@@ -231,6 +248,7 @@ function updatetime(){
     document.getElementById("result").style.fontWeight="normal";
     document.getElementById("result").innerHTML=Math.floor(time/10)+"."+(time%10);
     document.getElementById("finalscore").innerHTML="";
+    if(answered>0){document.getElementById("track").innerHTML="<span style=\"color:white; font-size:90%; font-style:italic; font-family:Georgia; position:absolute; top:-65px; left:-75px;\">(Find the pair)</span>";}
   }
 }
 
@@ -314,7 +332,9 @@ function restart(){
   replay=0;
   for(i=0; i<totalobjects; i++){usedobjects[i]=0;}
   for(i=0; i<totalobjects; i++){tempusedobjects[i]=0;}
-  document.getElementById("track").innerHTML=scoretrack.join("");
+  document.getElementById("track").innerHTML="<span style=\"color:white; font-size:90%; font-style:italic; font-family:Georgia; position:absolute; top:-65px; left:-75px;\">(Click a door)</span>";
+  document.getElementById("result").style.color="black";
+  document.getElementById("finalscore").innerHTML="";
   animating=1;
   newshoji();
   setTimeout(resetsymbols,1300)
@@ -391,7 +411,7 @@ function newshoji(){
     else{
       redpos+=(reddir*doorspeed*2);
       if(redpos>=bluestart){redpos=bluestart; reddir=-1; updatebluedoor();}
-      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0;  correct=0; updatetime(); document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
+      if(redpos<=redstart){redpos=redstart; reddir=1; slideorder=0; animating=0; correct=0; updatetime(); document.getElementById("redshoji").style.zIndex = "1"; document.getElementById("blueshoji").style.zIndex = "2";}
       doorcoords();
     }
     setTimeout(newshoji,(animationspeed))
