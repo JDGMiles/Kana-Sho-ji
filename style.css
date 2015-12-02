@@ -32,7 +32,8 @@ a:visited {color: red;}
   margin: 70px auto;
   padding: 20px;
   background: #181818;
-  border-radius: 5px;
+  border: 2px solid #AAAAAA;
+  border-radius: 20px;
   width: 50%;
   position: relative;
   transition: all 0s ease-in-out;
